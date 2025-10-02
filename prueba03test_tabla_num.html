@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de multiplicar</title>
+    <style>
+    </style>
+</head>
+<body>
+    <h1>Sumar números</h1>
+    <label>Número 1:</label>
+    <input type="number" id="cajanumero1">
+    <input type="number" id="cajanumero2">
+    <button id="botonsumar">Sumar números</button>
+    <h1 id="resultado"></h1>
+
+    <h1>Multiplicar números</h1>
+    <label>Número 1:</label>
+    <input type="text" id="cajatabla">
+    <table id="tabla">Tabla de multiplicar</table>
+    <button id="botontabla">Multiplicar números</button>
+    <h1 id="resultado"></h1>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonsumar").click(function(){
+                var num1 = Number($("#cajanumero1").val());
+                var num2 = Number($("#cajanumero2").val());
+                var suma= num1 + num2;
+                $("#resultado").text("La suma es :"+ suma)
+            });
+
+            //Función tabla de muliplicar con la propiedad html 
+            $("#botontabla").click(function(){
+                var num = Number($("#cajatabla").val());
+                var html =" "
+                for(var i =1; i<=10; i++){
+                     var operacion= num*i
+                     var texto=num +"*"+ i;
+                    html +="<tr>";
+                        html +="<td>"+ texto +"<td>";
+                        html +="<td>"+ operacion +"<td>";
+                    html +="<tr>";
+                }
+                $("#tabla").html(html)
+            });
+
+
+        });
+    </script>
+</body>
+</html>
