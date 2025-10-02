@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .completada {
+            text-decoration: line-through;
+            color: gray;
+        }
+        li { margin: 6px 0; }
+        .borrar { margin-left: 8px; }
+
+    </style>
+</head>
+<body>
+
+<input type="text" id="nueva-tarea" placeholder="Escribe una tarea">
+<button id="agregar">Agregar</button>
+<div>Tareas pendientes: <span id="contador">0</span></div>
+<ul id="lista"></ul>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        //CODIGO ANTIGUO
+       /*$(document).ready(function() {
+        // actualizar contador (opcional)
+        function actualizarContador() {
+        const pendientes = $("#lista li").not(".completada").length;
+        $("#contador").text(pendientes);
+        }
+        //1.Agregar tarea
+        $("#agregar").click(function(){
+            let tarea= $("#nueva-tarea").val();
+            if(tarea.trim()!==""){  
+                $("#lista").append("<li>" + tarea + " <button class='borrar'>X</button></li>");
+                $("#nueva-tarea").val(""); // limpiar input
+                $("#lista li:last-child").hide().fadeIn(250);
+                actualizarContador();
+            }
+        })
+        // Enter en el input -> llama a la misma función
+      $("#nueva-tarea").on("keydown", function(e) {
+        if (e.key === "Enter" || e.which === 13) {
+          e.preventDefault();
+            $("#agregar").click(function(){
+                let tarea= $("#nueva-tarea").val();
+                if(tarea.trim()!==""){  
+                    $("#lista").append("<li>" + tarea + " <button class='borrar'>X</button></li>");
+                    $("#nueva-tarea").val(""); // limpiar input
+                    $("#lista li:last-child").hide().fadeIn(250);
+                    actualizarContador();
+                }
+            })
+            }
+      });
+            
+        // 2. Marcar tarea como completada (evento delegado)
+        $("#lista").on("click","li",function(){
+            $(this).toggleClass("completada");
+            actualizarContador();
+
+        });
+
+        //3. Borrar tarea
+        $("#lista").on("click", ".borrar", function(event) {
+            $(this).fadeOut(300, function() { $(this).parent().remove(); actualizarContador();});
+            event.stopPropagation(); // evitar que se marque como completada
+        });
+       }); */
+
+       //CODIGO NUEVO
+       $(function() {
+      // Función central para añadir tarea
+      function agregarTarea() {
+        const tarea = $("#nueva-tarea").val().trim();
+        if (!tarea) return; // evita tareas vacías
+
+        // crear el <li> oculto, añadirlo y hacer fadeIn
+        const $li = $(`<li>${escapeHtml(tarea)} <button class="borrar">X</button></li>`).hide();
+        $("#lista").append($li);
+        $li.fadeIn(250);
+
+        $("#nueva-tarea").val("").focus(); //Limpia el input y le devuelve el foco para que puedas escribir la siguiente tarea sin click.
+        actualizarContador();
+      }
+
+      // escape simple para evitar problemas si pegas HTML
+      function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, function(m) {
+          return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m];
+        });
+      }
+
+      // actualizar contador (opcional)
+      function actualizarContador() {
+        const pendientes = $("#lista li").not(".completada").length;
+        $("#contador").text(pendientes);
+      }
+
+      // bind del botón
+      $("#agregar").on("click", agregarTarea);
+
+      // Enter en el input -> llama a la misma función
+      $("#nueva-tarea").on("keydown", function(e) {
+        if (e.key === "Enter" || e.which === 13) {
+          e.preventDefault();
+          agregarTarea();
+        }
+      });
+
+      // marcar completada (delegación)
+      $("#lista").on("click", "li", function() {
+        $(this).toggleClass("completada");
+        actualizarContador();
+      });
+
+      // borrar: evitar propagación y hacer fadeOut del LI, luego remove en callback
+      $("#lista").on("click", ".borrar", function(e) {
+        e.stopPropagation(); // que no dispare el click del li
+        $(this).closest("li").fadeOut(300, function() { $(this).remove(); actualizarContador(); });
+      });
+
+    });
+
+    </script>
+    
+</body>
+</html>
