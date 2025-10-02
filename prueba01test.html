@@ -4,8 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .color{
+            color: red;
+        }
+
+    </style>
 </head>
 <body>
-    <script></script>
+    <!-- COMENTARIOS EN IDE DE MICROSOFT
+    CONTROL + K + C  -->
+    <button id="borrar" class="color">HIDE</button>
+    <h1 id="uno">Selectores</h1>
+    <h2>Prueba</h2>
+    <button  class="color">Cambiar a rojo</button>
+    
+<script src="js/jquery-3.7.1.js"></script>
+<script>
+    //AQUÍ NUESTRO CÓDIGO JQUERY
+    
+    //LA PRIMERA DEBE SER LA SIGUIENTE
+
+    $(document).ready(function(){
+
+    //AQUI DENTRO LAS PETICIONES
+    // alert("Hola Mundo");
+
+        // FUNCION DE BOTÓN
+        $("#borrar").click(function(){
+        $(this).hide();
+        $("h1").show();
+        $("h2").show();
+        console.log("Has hecho click en el botón");
+        });
+        //Otra función asociando objetos
+        $("#uno").click(function(){
+        $(this).hide();
+        $("h2").show();
+        console.log("Boton h1 oculto y h2 visible!");
+        });
+
+        $("h2").click(function(){
+            $(this).hide();
+        $("#uno").show();
+        console.log("Boton h1 recuperado y h2 oculto!");
+        });
+
+        //existe la palabra clave this
+
+        $(".color").click(function(){
+            $(this).css("color","red");
+        });
+
+        //recuperar atributos
+        var dato =$("#uno").attr("id");
+        console.log(dato);
+
+
+
+    });
+
+</script>
+     
 </body>
 </html>
