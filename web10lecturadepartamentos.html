@@ -16,6 +16,7 @@
             <th>LOCALIDAD</th>
         </tr>
     </thead>
+    <tbody></tbody> 
 </table>
 
     <script src="js/jquery-3.7.1.js"></script>
@@ -40,7 +41,7 @@
                         html += "</tr>"
                     })
                     //usamos tbody para que no se nos borre el cabecero
-                    $("#tabladepartamentos ").html(html);
+                    $("#tabladepartamentos tbody").html(html);
                 })        
                 console.log("Después del servicio");       
             })    
