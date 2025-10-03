@@ -20,6 +20,15 @@
 
 <div id="mensaje"></div>
 <ul id="listadepartamentos"></ul>
+<table id="tabladepartamentos">
+    <thead>
+        <tr>
+            <th>NUMERO</th>
+            <th>NOMBRE</th>
+            <th>LOCALIDAD</th>
+        </tr>
+    </thead>
+</table>
 <hr/>
 
 
@@ -49,17 +58,29 @@
                 //obtención de los datos
                 $.get("documents/departamentos.xml",function(data){
                     console.log("Leyendo");
-                    //EL FILTRO SERÁ EL SIGUIENTE[DEPT[LOC=10]]                    
+
                     var loc= $("#cajaLocalidad").val();
                     var filtro = "LOC:contains("  + loc + ")"
                     //ESTA VEZ SON VARIOS ELEMENTOS QUE NOS PODRÍAN DEVOLVER POR LO TANTO USARÍAMOS EACH
                     var html="";
+
                     $(data).find(filtro).each(function(){
+                      //RECUPERAMOS EL DEPARTAMENTO COMPLETO
+
+                        var nombreDept =$(this).find("DNOMBRE").first().text();
+                        var numDept=$(this).parent().attr("DEPT_NO")
                         var objecto = $(this).text();
-                        html += "<li>"+ objecto + "</li>"
+                        //html += "<li>"+ objecto + "</li>"
+                        html += "<tr>";
+                        html += "<td>"+ nombreDept + "</td>"
+                        html += "<td>"+ numDept + "</td>"
+                        html += "<td>"+ objecto + "</td>"
+                        html += "</tr>"
+
                     })
-                    $("#listadepartamentos").html(html);
                     //AHORA QUEREMOS QUE AL FILTRAR SE MUESTRE EL ID Y EL NOMBRE
+                    $("#listadepartamentos").html(html);
+                    
                 })
 
             })
