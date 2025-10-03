@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectura XML</title>
+</head>
+<body>
+<h1>XML empleados</h1>
+<button id="botonLeer">Leer XML empleados</button>
+<ul id="listaEmpleados">
+    
+</ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonLeer").click(function(){
+                console.log("Antes del servicio");
+                //procedemos con la lectura
+                $.get("documents/empleados.xml",function(data){
+                    console.log("leyendo servicio")
+                    var html=" ";
+                    //BUSCAMOS LA ETIQUETA <APELLIDO> (reconoce las mayusculas y minus)
+                    $(data).find("APELLIDO").each(function(){
+                        //EL CONTENIDO YA ES ACCESIBLE
+                        var apellido= $(this).text();
+                        html += "<li>"+ apellido + "</li>"
+                        //html interpreta el texto,es la mejor manera de utilizarlo aqui
+                    })
+                    $("#listaEmpleados").html(html);
+                })        
+                console.log("Después del servicio");       
+            })    
+                
+        });
+    </script>
+</body>
+</html>

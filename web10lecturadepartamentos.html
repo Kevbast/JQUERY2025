@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectura departamentos</title>
+</head>
+<body>
+<h1>XML departamentos</h1>
+<button id="botonLeer">Leer XML departamentos</button>
+<table id="tabladepartamentos">
+    <thead>
+        <tr>
+            <th>NUMERO</th>
+            <th>NOMBRE</th>
+            <th>LOCALIDAD</th>
+        </tr>
+    </thead>
+</table>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonLeer").click(function(){
+                console.log("Antes del servicio");
+                //procedemos con la lectura
+                $.get("documents/departamentos.xml",function(data){
+                    console.log("leyendo servicio")
+                        var html=" ";    
+                       $(data).find("DEPT").each(function(){
+    
+                         var numDept= $(this).attr("DEPT_NO")
+                        //RECUPERAMOS LA PRIMERA ETIQUETA
+                        var nombreDept =$(this).find("DNOMBRE").first().text();
+                        var loc =$(this).find("LOC").first().text();
+                        html += "<tr>";
+                        html += "<td>"+ numDept + "</td>"
+                        html += "<td>"+ nombreDept + "</td>"
+                        html += "<td>"+ loc + "</td>"
+                        html += "</tr>"
+                    })
+                    //usamos tbody para que no se nos borre el cabecero
+                    $("#tabladepartamentos ").html(html);
+                })        
+                console.log("Después del servicio");       
+            })    
+                
+        });
+    </script>
+</body>
+</html>
