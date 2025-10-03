@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejemplo props Checkboxs</h1>
+<label >Seleccione el número de Checkboxs</label>
+<input type="range" id="rango" min="1" max="50" value="1">
+<span id="valorango"></span>
+<h1 style="color:red" id="resultado">0</h1>
+<hr/>
+<div id="contenedor"></div>
+
+        <script src="js/jquery-3.7.1.js"></script>
+        <script>
+             $(document).ready(function(){
+                $("#rango").change(function(){
+                   var numElementos= parseInt($("#rango").val())
+                   $("#valorango").text(numElementos);
+                   //limpiamos el contenedor
+                   $("contenedor").text("")
+
+                   //bucle para añadir los checkboxs segun el rango
+                   for (let i = 0; i <= numElementos; i++) {
+                    var aleatorio = parseInt(Math.random()*500)+1;
+                    var chk = $("<input>",{"type":"checkbox","value": aleatorio});
+                    var label=$("<label>",{"text": aleatorio});
+                     
+                    $("#contenedor").append(chk); 
+                    $("#contenedor").append(label);
+
+                    //utilizamos props
+                    chk.change(function(){
+                        //pasamos los dos resultados a números ya que los necesitaremos,tanto como para sumar los valores como para calcularlos
+                        var resultado=parseInt($("#resultado").text());
+                        var valor=parseInt($(this).val());
+                    //Preguntamos por el valor del checkbox
+                    if($(this).prop("checked")==true){
+                        resultado +=valor;
+                    }else{
+                        resultado -=valor
+                    }
+
+                    $("#resultado").text(resultado);
+                    //Con is en vez de
+                    /*
+                    if($(this).is(":checked")==true){
+                        resultado +=valor;
+                    }else{
+                        resultado -=valor
+                    }*/
+
+                    
+                    //otra manera de hacerlo con each checked
+                    /*chk.change(function(){
+                    var resultado=0;
+                    //SUMAMOS SOLAMENTE LOS CONTROLES CHECKEADOS
+                    $("input[type=checkbox]:checked").each(function(){
+                        var valor = parseInt($(this).val());
+                        resultado +=valor;
+                    })
+                    $("#resultado").text(resultado);
+
+                    });*/
+                        
+                    })
+
+                   }
+                    
+                })
+            })
+        </script>
+</body>
+</html>
