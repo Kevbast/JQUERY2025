@@ -68,28 +68,36 @@
                         alert("No existe esa localidad");
                         return
                     }        
-                    var filtro = "LOC:contains("  + loc + ")"
-                    //ESTA VEZ SON VARIOS ELEMENTOS QUE NOS PODRÍAN DEVOLVER POR LO TANTO USARÍAMOS EACH
-                    var html="";
+                    // Queremos coincidencia exacta (case-insensitive) en LOC
+                    var buscado = loc.trim().toLowerCase();
+                    var html = "";
+                    var encontrados = 0;
 
-                    $(data).find(filtro).each(function(){
+                    // Recorremos los elementos LOC y comparamos su texto normalizado
+                    $(data).find('LOC').each(function(){
+                        var textoLoc = $(this).text().trim().toLowerCase();
+                        if(textoLoc === buscado){
+                            encontrados++;
+                            var nombreDept = $(this).parent().find("DNOMBRE").text();
+                            var numDept = $(this).parent().attr("DEPT_NO");
+                            var objecto = $(this).text();
 
-                       //RECUPERAMOS EL DEPARTAMENTO COMPLETO
-                        var nombreDept=$(this).parent().find("DNOMBRE").text();
-                        var numDept=$(this).parent().attr("DEPT_NO")
-                        var objecto = $(this).text();                       
-                        
+                            html += "<tr>";
+                            html += "<td>"+ numDept + "</td>";
+                            html += "<td>"+ nombreDept + "</td>";
+                            html += "<td>"+ objecto + "</td>";
+                            html += "</tr>";
+                        }
+                    });
 
-                        //html += "<li>"+ objecto + "</li>"
-                        html += "<tr>";
-                        html += "<td>"+ numDept + "</td>"
-                        html += "<td>"+ nombreDept + "</td>"
-                        html += "<td>"+ objecto + "</td>"
-                        html += "</tr>"
+                    if(encontrados === 0){
+                        alert("No existe esa localidad");
+                        // limpiar la tabla por si había datos previos
+                        $("#tabladepartamentos tbody").empty();
+                        return;
+                    }
 
-                    })
-                    //AHORA QUEREMOS QUE AL FILTRAR SE MUESTRE EL ID Y EL NOMBRE
-
+                    // Mostrar resultados
                     $("#tabladepartamentos tbody").html(html);
 
                 })
