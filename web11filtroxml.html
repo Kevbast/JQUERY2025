@@ -67,7 +67,30 @@
                     if(loc==""){
                         alert("No existe esa localidad");
                         return
-                    }        
+                    }
+                    //función con contains pero sin la funcionalidad del filtro
+                     /*var filtro = "LOC:contains("  + loc + ")"
+                    //ESTA VEZ SON VARIOS ELEMENTOS QUE NOS PODRÍAN DEVOLVER POR LO TANTO USARÍAMOS EACH
+                    var html="";
+
+                    $(data).find(filtro).each(function(){
+
+                       //RECUPERAMOS EL DEPARTAMENTO COMPLETO
+                        var nombreDept=$(this).parent().find("DNOMBRE").text();
+                        var numDept=$(this).parent().attr("DEPT_NO")
+                        var objecto = $(this).text();                       
+                        
+
+                        //html += "<li>"+ objecto + "</li>"
+                        html += "<tr>";
+                        html += "<td>"+ numDept + "</td>"
+                        html += "<td>"+ nombreDept + "</td>"
+                        html += "<td>"+ objecto + "</td>"
+                        html += "</tr>"
+
+                    })*/
+
+                    
                     // Queremos coincidencia exacta (case-insensitive) en LOC
                     var buscado = loc.trim().toLowerCase();
                     var html = "";
