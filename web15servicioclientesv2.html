@@ -20,40 +20,51 @@
                 console.log("Datos obtenidos");
                 
                 var botones= $("<button>");
+                    /*var boton=$("<button>",{"text":nombre,"data-id":id,"value":id});*/
                 var id =$(this).find("IdCliente").first().text();
                 var nombre =$(this).find("Nombre").first().text();
                
                 botones.text(nombre);
                 botones.val(id);
                 $("#contenedorbotones").append(botones);
+                    
+                //Function click
+                botones.click(function(){
+                    let idclient= $(this).val();
+                    $.get("https://apiclientesxml.azurewebsites.net/api/Clientes/"+idclient,function(data){
+                        console.log("Cargando datos")
+                    //this no funciona con get habría que hacer un $(data.find().each() 
+                     var email= $(data).find("Email").text();
+                     var web= $(data).find("PaginaWeb").text();
+                     var imagen= $(data).find("Imagen").text();
+                                  
+                     $("#contenedordatos").html("<h1>"+"email"+email+"</h1>"+"Página web: "+web+"<p>"+"<img src= '"+imagen +"' style='with:150px ; height:150px '>")
 
+                    })
+                })
                
              })       
-
-
-
+             //se podría hacer fuera teniendo en cuenta que no haya más button a parte
+             /*
+             //FUNCTION CLICK DENTRO DEL GET,SI NO,NO FUNCIONA
              $("button").click(function(){
                 let idclient= $(this).val();
                 console.log("id "+idclient+" del select obtenido")
                 $.get("https://apiclientesxml.azurewebsites.net/api/Clientes/"+idclient,function(data){
                     console.log("Cargando datos")
-                    //this no funciona con get
-                     var email= $(data).find("Email").first().text();
-                     var web= $(data).find("PaginaWeb").first().text();
-                     var imagen= $(data).find("Imagen").first().text();
+                    //this no funciona con get habría que hacer un $(data.find().each() 
+                     var email= $(data).find("Email").text();
+                     var web= $(data).find("PaginaWeb").text();
+                     var imagen= $(data).find("Imagen").text();
                                   
-                     $("#contenedordatos").html("<p>"+"email"+email+"<p>"+"Página web: "+web+"<p>"+"<img src= '"+imagen +"' style='with:150px ; height:150px '>")
+                     $("#contenedordatos").html("<h1>"+"email"+email+"<h1>"+"Página web: "+web+"<p>"+"<img src= '"+imagen +"' style='with:150px ; height:150px '>")
 
-                })
+                })//FINAL GET CLIENTE/ID
              })
-            })//final get
+              
+             */
 
-
-
-            //función click
-            
-           
-
+            })//final get CLIENTES
 
         });
     </script>
