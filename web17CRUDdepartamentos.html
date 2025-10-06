@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD DEPARTAMENTOS</title>
+</head>
+<body>
+    <h1>CRUD DEPARTAMENTOS XML</h1>
+
+    <table id="tabladepartamentos">
+        <thead>
+            <tr>
+                <th>Id departamento</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url="https://apicruddepartamentosxml.azurewebsites.net/";
+        $(document).ready(function(){
+            //Cargamos la función
+            loadDepartamentos();
+        })//final documento
+        //Creamos un metodo para cargar los departamentos
+        function loadDepartamentos(){
+            var request = "api/departamentos";
+            $.get(url+request,function(data){
+                console.log("leyendo servicio");
+                var html= "";
+
+                $(data).find("Departamento").each(function(){
+                    var id= $(this).find("IdDepartamento").text();
+                    var nombre= $(this).find("Nombre").text();
+                    var localidad= $(this).find("Localidad").text();
+
+                    html += "<tr>";
+                    html += "<td>"+ id + "</td>";
+                    html += "<td>"+ nombre + "</td>";
+                    html += "<td>"+ localidad + "</td>";
+                    html += "</tr>";
+                });//final data
+                $("#tabladepartamentos tbody").html(html);
+
+            });//final get
+        }
+
+    </script>
+</body>
+</html>
