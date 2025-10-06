@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Servicio clientes</h1>
+<label >Seleccione un cliente para visualizar sus datos</label>
+<select  id="selectcliente"></select>
+<div id="contenedor"></div>
+
+    <!-- FUNCIONES -->
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            //EMPEZAMOS CARGANDO LOS CLIENTES(REVISAR LOS ENLACES,SI SE PUEDE PEGAR A UN BLOG DE NOTAS Y YA LO COPIAMOS,MÁS Q NADA X EL FORMATO)
+            $.get("https://apiclientesxml.azurewebsites.net/api/Clientes/GetClientesXML",function(data){
+                console.log("Recogiendo datos")
+                $(data).find("cliente").each(function(){
+                    var id =$(this).attr("IDCLIENTE");
+                    var nombre =$(this).find("NOMBRE").first().text();
+                    var option=$("<option>");   
+                        option.val(id);
+                        option.text(nombre);
+                        $("#selectcliente").append(option)
+                        /*html +="< option value='"+id+"'>"*/
+                })
+            })//final get
+
+            //Comenzamos con la funcionalidad del select 
+            $("#selectcliente").change(function(){
+                let idclient = $(this).val();//Recogemos el id antes de entrar al get
+                console.log("id "+idclient+" del select obtenido")
+                $.get("https://apiclientesxml.azurewebsites.net/api/Clientes/GetClientesXML",function(data){
+                console.log("Leyendo datos del cliente")
+                //procedemos con el filtro
+                var filtro = "CLIENTE[IDCLIENTE="+ idclient+"]";
+                var nodocli = $(data).find(filtro).first();
+                
+                var direccion= nodocli.find("DIRECCION").text();
+                var email= nodocli.find("EMAIL").text();
+                var codpostal= nodocli.find("CODIGOPOSTAL").text();
+                var web= nodocli.find("PAGINAWEB").text();
+                var imagen= nodocli.find("IMAGENCLIENTE").text();
+                //tambien se puede mostrar así
+                //var img= $""
+
+                 $("#contenedor").html("<p>"+"email"+email+"<p>"+"codigo postal: "+codpostal+"<p>"+"Página web: "+web+"<p>"+"<img src= '"+imagen +"' style='with:150px ; height:150px '>")
+                })//final get
+
+            })
+
+
+        })//FINAL DEL DOCUMENT
+    </script>
+</body>
+</html>

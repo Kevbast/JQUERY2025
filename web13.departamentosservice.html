@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Filtro departamentos</h1>
+
+   <button id="cargar">cargar lista de departamentos</button>
+<ul id="listadepartamentos"></ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#cargar").click(function(){
+                console.log("Antes del servicio");
+
+                var html=" ";
+                //lectura de datos
+                $.get("https://apicruddepartamentosxml.azurewebsites.net/api/departamentos",function(data){
+                    console.log("Leyendo los datos....")
+
+                    $(data).find("Departamento").each(function(){
+                        var id= $(this).find("IdDepartamento").first().text();
+                        var nombre= $(this).find("Nombre").first().text();
+                        var localidad= $(this).find("Localidad").first().text();
+                        html += "<li>"+ id +" , "+ nombre+" , "+ localidad+" </li>"
+                    });//final del data
+                    $("#listadepartamentos").html(html);
+                })//final del get
+                 
+            })
+        })
+    </script>
+</body>
+</html>

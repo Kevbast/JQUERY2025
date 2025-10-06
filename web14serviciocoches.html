@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<h1>Servicio coches</h1>
+<label >Seleccione un coche</label>
+    <select  id="selectcoche">
+        <!-- <option value="1">DMC DELOREAN</option>
+        <option value="2">Pontiac Firebird</option>
+        <option value="2">VOLKSWAGEN ESCARABAJO</option> -->
+    </select>
+<div id="contenedor"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            //LEEMOS EL SERVICIO Y CARGAMOS TODOS LOS COCHES
+            //EL SERVICIO LO VAMOS A LEER AL INICIO(REVISAR LOS ENLACES,SI SE PUEDE PEGAR A UN BLOG DE NOTAS Y YA LO COPIAMOS,MÁS Q NADA X EL FORMATO)
+            $.get("https://apiclientesxml.azurewebsites.net/api/clientes/getcochesxml",function(data){
+                console.log("Leyendo los datos....")
+
+                $(data).find("coche").each(function(){
+                    var id=$(this).attr("idcoche");
+                    var marca=$(this).find("marca").text();
+                    var modelo=$(this).find("modelo").text();
+                    var option=$("<option>");
+                        option.val(id);
+                        option.text(marca + " " + modelo);
+                        $("#selectcoche").append(option)
+                })
+            });//final get
+
+             //Cuando cambie de option actuará ,REVISAR SIEMPRE EL ID
+                $("#selectcoche").change(function(){
+                    //PORQUE EL THIS HACE REFERENCIA AL SELECT DEL COCHE
+                    var id = $(this).val()//EL ID DEL OPTION del select
+                    //REVISAR SIEMPRE CON CONSOLE LOGS
+                    console.log(id)
+                    $.get("https://apiclientesxml.azurewebsites.net/api/clientes/getcochesxml",function(data){
+                        console.log("Leyendo datos del coche...");  
+
+                        var filtro = "coche[idcoche = "+ id + "]";
+                        var nodo = $(data).find(filtro).first();
+                        var imagen= nodo.find("imagen").text()
+
+                        $("#contenedor").html("<img src= '"+imagen +"' style='with:150px ; height:150px '>")
+
+                    });//final get
+                });
+            
+        });
+    </script>
+</body>
+</html>

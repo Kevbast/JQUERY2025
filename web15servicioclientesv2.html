@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio clientes v2</title>
+</head>
+<body>
+    <h1>Servicio clientes v2</h1>
+
+    <div id="contenedorbotones"></div>
+    <div id="contenedordatos"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){   
+            //Cargamos los clientes
+            $.get("https://apiclientesxml.azurewebsites.net/api/Clientes",function(data){
+             console.log("Recogiendo datos")
+             $(data).find("Cliente").each(function(){
+                console.log("Datos obtenidos");
+                
+                var botones= $("<button>");
+                var id =$(this).find("IdCliente").first().text();
+                var nombre =$(this).find("Nombre").first().text();
+               
+                botones.text(nombre);
+                botones.val(id);
+                $("#contenedorbotones").append(botones);
+
+               
+             })       
+
+
+
+             $("button").click(function(){
+                let idclient= $(this).val();
+                console.log("id "+idclient+" del select obtenido")
+                $.get("https://apiclientesxml.azurewebsites.net/api/Clientes/"+idclient,function(data){
+                    console.log("Cargando datos")
+                    //this no funciona con get
+                     var email= $(data).find("Email").first().text();
+                     var web= $(data).find("PaginaWeb").first().text();
+                     var imagen= $(data).find("Imagen").first().text();
+                                  
+                     $("#contenedordatos").html("<p>"+"email"+email+"<p>"+"Página web: "+web+"<p>"+"<img src= '"+imagen +"' style='with:150px ; height:150px '>")
+
+                })
+             })
+            })//final get
+
+
+
+            //función click
+            
+           
+
+
+        });
+    </script>
+</body>
+</html>
