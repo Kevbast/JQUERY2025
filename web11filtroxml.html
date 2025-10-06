@@ -101,7 +101,7 @@
                         var textoLoc = $(this).text().trim().toLowerCase();
                         if(textoLoc === buscado){
                             encontrados++;
-                            var nombreDept = $(this).parent().find("DNOMBRE").text();
+                            var nombreDept = $(this).parent().find("DNOMBRE").first().text();
                             var numDept = $(this).parent().attr("DEPT_NO");
                             var objecto = $(this).text();
 

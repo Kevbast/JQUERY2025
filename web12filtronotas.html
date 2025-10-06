@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1>FILTRO NOTAS ALUMNOS</h1>
+<label >Introduzca la nota: </label>
+<input type="number"  id="cajaid"/>
+<button id="botonNota">Buscar alumnos</button>
+
+<table id="tablalumnos">
+    <thead>
+        <tr>
+            <th>NUMERO</th>
+            <th>APELLIDOS</th>
+            <th>NOTA</th>
+        </tr>
+    </thead>
+    <tbody></tbody> 
+</table>
+
+
+        <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#botonNota").click(function(){
+                console.log("Antes del servicio");
+                $.get("documents/alumnos.xml",function(data){
+                    console.log("Leyendo");
+                    var html=" "
+                    //PROCEDEMOS CON LA RECOLECCIÓN DE DATOS
+                     var nota=Number($("#cajaid").val());
+                    var html=" "
+                      if(nota==""){
+                        alert("No existe alumno con esa nota");
+                        return
+                        }
+
+                        //ESTA MAL EL FILTRO,SERÍA CON CONTAINS SOLO O COGE POR IGUALDAD,OSEA QUE TAMPOCO VALDRÍA
+                     /*   
+                     ESTE FILTRO ES PARA UNA TRIBUTO,NO PARA UNA TAG
+                     var filtro = "alumno[nota="+ nota + "]"
+
+                     $(data).find(filtro).each(function(){
+                        console.log("cargando..")
+                        //RECUPERAMOS EL DEPARTAMENTO COMPLETO
+                        var nombre=$(this).parent().find("nombre").text();
+                        var apellido=$(this).parent().find("apellidos").text();
+                        var notas = $(this).text();                       
+                                            
+                        html += "<tr>";
+                        html += "<td>"+ nombre + "</td>"
+                        html += "<td>"+ apellido + "</td>"
+                        html += "<td>"+ notas + "</td>"
+                        html += "</tr>"
+                     })*/
+                       $(data).find("alumno").each(function(){
+                        var notaAlumno= parseInt($(this).find("nota").first().text())
+                        if (notaAlumno >= nota){                                       
+                        var nombre=$(this).find("nombre").first().text();
+                        var apellido=$(this).find("apellidos").first().text();                                         
+                                            
+                        html += "<tr>";
+                        html += "<td>"+ nombre + "</td>"
+                        html += "<td>"+ apellido + "</td>"
+                        html += "<td>"+ notaAlumno + "</td>"
+                        html += "</tr>"
+                        }
+                        
+                       }) 
+
+
+
+                    //Aplicamos en la tabla
+                     // Mostrar resultados
+                    $("#tablalumnos tbody").html(html);
+
+                })  
+            })
+        })
+    </script>
+</body>
+</html>
