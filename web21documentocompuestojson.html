@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento compuesto</title>
+</head>
+<body>
+    <h1>Documento simple Json</h1>
+    <button id="botonload">Documento objetos JSON</button>
+    <ul id="clientes"></ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("#botonload").click(function(){   
+            console.log("cargando") 
+            //lo podemos usar con ajax         
+            $.ajax({
+                url:"documents/clientes.json",
+                method:"GET",
+                dataType: "json", //TIPO DE DATO QUE VAMOS A RECIBIR
+                success:function(data){
+                    console.log("Leyendo......")
+                    var html="";
+                    //siempre mirar data para saber donde acceder por si tenemos que entrar a una o a otra,mirar JSON clientes
+                    $.each(data.clientes,function(index,objeto){
+                        html += "<li>Index: "+index+", Objeto: "+ objeto.nombre + "</li>";                       
+                    })
+                    
+                    $("#clientes").html(html);
+                }
+            })          
+        })
+    })
+    </script>
+</body>
+</html>

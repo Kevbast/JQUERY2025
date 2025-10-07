@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busqueda JSON</title>
+</head>
+<body>
+    <h1>Búsqueda Json</h1>
+    <label >Selecione un jugador</label>
+    <select name="jugadores" id="selectjugador"></select>
+    <div id="containerjugador"></div>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>   
+    $(document).ready(function(){
+        $.getJSON("documents/jugadores.json",function(data){
+            //recorremos
+            $.each(data.jugadores,function(index,player){
+                var nombre= player.nombre;
+                var option = $("<option>",{"text":nombre });// "value":indexpara hacerlo sin eleach se podría añadir un value
+                $("#selectjugador").append(option);
+            })//final each
+
+        })//final get
+        $("#selectjugador").change(function(){
+            console.log("cambiando jugador")
+            // var index = $(#selectjugador).val();
+            //var index =$("#selectedjugador").prop("selectedIndex")
+            var name= $("#selectjugador").val();
+            $.ajax({
+                url:"documents/jugadores.json",
+                method:"GET",
+                dataType: "json",
+                success:function(data){
+                    var html = "";
+                    //Versión uno
+                    $.each(data.jugadores,function(index,player){
+                        var playerName = player.nombre;
+                        if(playerName== name){
+                            //creamos
+                            var posicion= player.posicion;
+                            var imagen = player.imagen;
+                        html += "<h1> "+playerName+"</h1>";                       
+                        html += "<p>Posición: "+posicion+"</p>";                       
+                        html += "<img src ='"+imagen+"'/>";                       
+                        }
+                        console.log(html);
+                        $("#containerjugador").html(html)
+                    })
+                    //versión 2 sin each ,ni if ni bucles recogiendo el index
+                    /*var player = data.jugadores[index];
+                    console.log(player.nombre)*/
+
+
+
+
+                }
+            })
+        })
+
+
+    })
+
+    </script>
+</body>
+</html>
