@@ -7,6 +7,16 @@
 </head>
 <body>
     <h1>CRUD DEPARTAMENTOS XML</h1>
+    <label >Id departamento</label>
+    <input type="text" id="cajaid"><br/>
+    <label >Nombre</label>
+    <input type="text" id="cajanombre"></br>
+    <label >Localidad</label>
+    <input type="text" id="cajalocalidad"></br>
+
+    <button id="botoninsert">Insertar</button>
+    <button id="botonupdate">Modificar</button>
+    <button id="botondelete">Eliminar</button>
 
     <table id="tabladepartamentos">
         <thead>
@@ -25,7 +35,89 @@
         $(document).ready(function(){
             //Cargamos la función
             loadDepartamentos();
+
+            //RECUPERAMOS EL BOTON INSERT Y EMPEZAMOS CON LA FUNCIÓN
+            $("#botoninsert").click(function(){
+                let id= $("#cajaid").val();
+                let nombre= $("#cajanombre").val();
+                let localidad= $("#cajalocalidad").val();
+                //NECESITAMOS GENERAR UN STRING CON LA MISMA ESTRCUTURA
+                //QUE EL DOCUMENTO XML PARA SUS REGISTROS
+                let dataXML= "";
+                    dataXML += "<Departamento>";
+                    dataXML +="<IdDepartamento> "+ id+"</IdDepartamento>"
+                    dataXML +="<Nombre> "+ nombre+"</Nombre>"
+                    dataXML +="<Localidad> "+ localidad+"</Localidad>"
+                        dataXML += "</Departamento>";
+                        //Hacemos la request
+                let request = "api/Departamentos";
+                //Realizamos la petición con AJAX!!!!
+                $.ajax({
+                    url:url+request,
+                    type:"POST",
+                    contentType:"text/xml", //el formato que vamos a enviar
+                    data: dataXML,
+                    success:function(){
+                        console.log("INSERTADO");
+                        loadDepartamentos();
+                    }
+                })
+
+            })//final del boton insert
+
+            //EMPEZAMOS CON EL UPDATE
+            $("#botonupdate").click(function(){
+                let id =$("#cajaid").val();
+                let nombre =$("#cajanombre").val();
+                let localidad =$("#cajalocalidad").val();
+                //Llamamos a la función para que nos envie el objeto
+                let dataXML = getDepartamentoXML(id,nombre,localidad);
+                //Realizamos la petición con AJAX!!!!
+                let request = "api/Departamentos";
+                $.ajax({
+                url:url+request,
+                type: "PUT",
+                contentType:"text/xml",
+                data:dataXML,
+                success:function(){
+                    console.log("MODIFICADO")
+                    loadDepartamentos();
+                }
+                })
+            })//FINAL BOTONUPDATE
+
+            //EMPEZAMOS LA FUNCIÓN DELETE
+            $("#botondelete").click(function(){
+                let id = $("#cajaid").val();
+                let request = "api/Departamentos/"+ id;
+
+                $.ajax({
+                    url: url+request,
+                    type:"DELETE",
+                    success:function(){
+                        console.log("OBJETO ELIMINADO")
+                        loadDepartamentos();
+                    }
+                })
+            })//FINAL BOTONDELETE
+
+
+
         })//final documento
+
+        //FUNCION PARA OBTENER EL DEPARTAMENTO PARA EL UPDATE
+        function getDepartamentoXML(id,nombre,localidad){
+            let dataXML= "";
+                    dataXML += "<Departamento>";
+                    dataXML +="<IdDepartamento> "+ id+"</IdDepartamento>"
+                    dataXML +="<Nombre> "+ nombre+"</Nombre>"
+                    dataXML +="<Localidad> "+ localidad+"</Localidad>"
+                    dataXML += "</Departamento>";
+                    return dataXML;
+        }
+
+
+
         //Creamos un metodo para cargar los departamentos
         function loadDepartamentos(){
             var request = "api/departamentos";
@@ -45,9 +137,10 @@
                     html += "</tr>";
                 });//final data
                 $("#tabladepartamentos tbody").html(html);
-
             });//final get
-        }
+        }//final function load
+
+        
 
     </script>
 </body>
