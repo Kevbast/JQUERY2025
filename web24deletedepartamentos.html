@@ -13,25 +13,44 @@
     let url="https://apicruddepartamentospgs.azurewebsites.net/"
     $(document).ready(function(){
         loadDepartamentos();
-        
+        // Delegación de eventos — porque los botones se crean dinámicamente
+        $(document).on("click", ".btn-delete", function(){
+            console.log("click en boton");
+            let id = Number($(this).val());
+            console.log(id);
+            var request="/webresources/departamentos/delete/"+id;
+            //petición delete
+            $.ajax({
+                url:url+request,
+                method:"DELETE",
+                success:function(){
+                        console.log("OBJETO ELIMINADO!!")
+                        loadDepartamentos();
+                    }
+            })
+            
+        })
+
     })
     function loadDepartamentos(){     
             var request ="webresources/departamentos"
             console.log("cargando")
             var html= "";
-            var button="<button>Delete</button>"
-            
-
-                     
+            //var button="<button>Delete</button>"
+            //petición get                
            $.getJSON(url+request,function(data){
             console.log("leyendo....")
             $.each(data,function(index,departamento){ 
                 //añadir valor al boton
-                    html += "<li>Departamento: "+departamento.nombre+" "+button+"</li>";
+                    html += "<li>Departamento: " 
+                    + departamento.nombre
+                    + " <button class='btn-delete' value='"+ departamento.numero + "'>Delete</button></li>";
+                    console.log(departamento.numero)                   
                     $("#listaDept").html(html);
            })
           
         })
+        
     }
     </script>
     
