@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamento sin swagger</title>
+</head>
+<body>
+    <h1>CRUD DEPARTAMENOS JSON</h1>
+    <ul id="listaDept"></ul>
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+    let url="https://apicruddepartamentospgs.azurewebsites.net/"
+    $(document).ready(function(){
+        loadDepartamentos();
+        
+    })
+    function loadDepartamentos(){     
+            var request ="webresources/departamentos"
+            console.log("cargando")
+            var html= "";
+            var button="<button>Delete</button>"
+            
+
+                     
+           $.getJSON(url+request,function(data){
+            console.log("leyendo....")
+            $.each(data,function(index,departamento){ 
+                //añadir valor al boton
+                    html += "<li>Departamento: "+departamento.nombre+" "+button+"</li>";
+                    $("#listaDept").html(html);
+           })
+          
+        })
+    }
+    </script>
+    
+</body>
+</html>
