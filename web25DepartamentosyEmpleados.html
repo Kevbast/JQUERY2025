@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamentos y empleados</title>
+</head>
+<body>
+    <h1>Maestro detalle departamento</h1>
+    <ul id="listaDept"></ul>
+
+    <table id="tablaempleados" border="1">
+        <thead>
+            <tr>
+                <th>Apellidos</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+                <th>Departamento</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+    let url="https://apicruddepartamentospgs.azurewebsites.net/"//urldepartamentos primero
+    $(document).ready(function(){
+        loadDepartamentos();
+        //Procedemos con la función de empleados
+        $(document).on("click", ".button-empleados", function(){
+            let id = Number($(this).val());//Como es una concatenación no sería necesario pasarlo a number
+            //var idDepartamento  =$(this).data("iddepartamento"); si lo hacemos con el link
+            console.log(id);
+            //PROCEDEMOS CON LA FUNCIÓN EMPLEADO
+            $.ajax({
+                url:"https://apiempleadosspgs.azurewebsites.net/api/Empleados/EmpleadosDepartamento/"+ id,//url empleados para proceder con el search
+                method:"GET",
+                dataType: "json", //TIPO DE DATO QUE VAMOS A RECIBIR
+                success:function(data){
+                    console.log("Leyendo......")
+                    var html="";
+                    //siempre mirar data para saber donde acceder por si tenemos que entrar a una o a otra,mirar JSON clientes
+                    $.each(data,function(index,empleado){
+                            html += "<tr>";
+                            html += "<td>"+ empleado.apellido + "</td>";
+                            html += "<td>"+ empleado.oficio + "</td>";
+                            html += "<td>"+ empleado.salario + "</td>";
+                            html += "<td>"+ empleado.departamento + "</td>";
+                            html += "</tr>";    
+                                           
+                    })
+                    
+                    $("#tablaempleados tbody").html(html);
+                }
+            })  
+
+
+        })
+        
+
+    })//Final documento
+
+    function loadDepartamentos(){     
+            var request ="webresources/departamentos"
+            console.log("cargando")
+            var html= "";
+            //petición get                
+           $.getJSON(url+request,function(data){
+            console.log("leyendo....")
+            $.each(data,function(index,departamento){ 
+                //añadir valor al boton
+                    html += "<li>Departamento: "+ departamento.nombre
+                    + " <button class='button-empleados' value='"+ departamento.numero + "'>Empleados</button></li>";
+                    //se podría hacer con data-key si usamos a
+                    //"<a href="#" class='button-empleados' data-iddepartamento='"+departamento.numero+"'>Empleados</a>";
+                    console.log(departamento.numero)                   
+                    $("#listaDept").html(html);
+           })
+          
+        })
+        
+    }
+    </script>
+    
+</body>
+</html>

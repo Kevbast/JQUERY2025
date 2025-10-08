@@ -16,9 +16,9 @@
         // Delegación de eventos — porque los botones se crean dinámicamente
         $(document).on("click", ".btn-delete", function(){
             console.log("click en boton");
-            let id = Number($(this).val());
+            let id = Number($(this).val());//Como es una concatenación no sería necesario pasarlo a number
             console.log(id);
-            var request="/webresources/departamentos/delete/"+id;
+            var request="webresources/departamentos/delete/"+id;
             //petición delete
             $.ajax({
                 url:url+request,
@@ -36,14 +36,12 @@
             var request ="webresources/departamentos"
             console.log("cargando")
             var html= "";
-            //var button="<button>Delete</button>"
             //petición get                
            $.getJSON(url+request,function(data){
             console.log("leyendo....")
             $.each(data,function(index,departamento){ 
                 //añadir valor al boton
-                    html += "<li>Departamento: " 
-                    + departamento.nombre
+                    html += "<li>Departamento: "+ departamento.nombre
                     + " <button class='btn-delete' value='"+ departamento.numero + "'>Delete</button></li>";
                     console.log(departamento.numero)                   
                     $("#listaDept").html(html);

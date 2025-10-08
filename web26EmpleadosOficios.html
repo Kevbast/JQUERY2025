@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficios</title>
+</head>
+<body>
+<h1>Empleados Oficios</h1>
+<select name="empleados" id="selectoficios"></select>
+<label >Incremento salarial: </label></br>
+<input type="text" id="cajasalario"></body></html> </br>
+<button id="buttonincremento">Incrementar salarios</button>
+
+ <table id="tablaempleados" border="1">
+        <thead>
+            <tr>
+                <th>Apellidos</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.7.1.js"></script>
+    <script>
+        let url ="https://apiempleadosaction.azurewebsites.net/"
+        $(document).ready(function(){
+            console.log("Cargando oficios....")
+            $.getJSON(url+"api/Empleados/GetOficios/oficios",function(data){
+                $.each(data,function(index,oficio){
+                    
+                    console.log(oficio);
+                    var option = $("<option>",{"text":oficio});
+                        $("#selectoficios").append(option);
+                })  
+            })//final getJSON
+
+            //selectchange
+            $("#selectoficios").change(function(){
+            console.log("oficio seleccionado")
+            var oficio= $("#selectoficios").val();
+            console.log(oficio)
+            //recoger oficio empleados
+                $("#buttonincremento").click(function(){
+                    var salarioincrementado= Number($("#cajasalario").val());
+                    var request="/api/Empleados/IncrementarSalarioOficios/"+oficio+"/"+salarioincrementado
+                    $.ajax({
+                        url:url + request,
+                        method:"PUT",
+                        contentType: "application/json",//TIPO DE DATO QUE VAMOS A RECIBIR //como ya lo hace todo la request no haría falta el data:                    
+                        success:function(){
+                        console.log("ACTUALIZADO CORRECTAMENTE")
+                        loadDepartamentos(oficio);
+                        }
+                    })
+
+                })//final button
+
+            })
+
+
+        })//final document ready
+        function loadDepartamentos(oficio){
+            console.log("boton pulsado")
+            var oficioselect = oficio
+            var request ="/api/Empleados/GetEmpleadosOficio/empleadosoficio/"+ oficioselect;
+            console.log("cargando")
+            var html= "";         
+           $.getJSON(url+request,function(data){
+            console.log("leyendo....")
+            $.each(data,function(index,empleados){
+                        html += "<tr>";
+                            html +="<td>"+empleados.apellido+"</td>";
+                            html +="<td>"+empleados.oficio+"</td>";
+                            html +="<td>"+empleados.salario+"</td>";
+                        html += "</tr>";
+                    })
+                    $("#tablaempleados tbody").html(html);
+           })
+        }
+    </script>
+    
+</body>
+</html>
