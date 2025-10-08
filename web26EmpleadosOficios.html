@@ -41,11 +41,12 @@
             //----------------------SELECT_OFICIOS----------------------------
             $("#selectoficios").change(function(){
             console.log("oficio seleccionado")
-            var oficio= $("#selectoficios").val();//recoger oficio empleados
+            var oficio= $(this).val();//recoger oficio empleados
             console.log(oficio)
-            loadDepartamentos(oficio);//cargamos el oficio para visualizarlo antes de actuar!!!!
+            loadEmpleados(oficio);//cargamos el oficio para visualizarlo antes de actuar!!!!
                 //FUNCIÓN DEL BOTÓN
                 $("#buttonincremento").click(function(){
+                    //UNA BUENA PRÁCTICA SERÍA DECLARAR EL OFICIO OTRA VEZ DENTRO DEL BOTÓN
                     var salarioincrementado= Number($("#cajasalario").val());
                     var request="/api/Empleados/IncrementarSalarioOficios/"+oficio+"/"+salarioincrementado;
                     $.ajax({
@@ -55,7 +56,7 @@
                         success:function(){
                         console.log("ACTUALIZADO CORRECTAMENTE");
                         //LLAMAMOS PARA QUE RECARGUE 
-                        loadDepartamentos(oficio);
+                        loadEmpleados(oficio);
                         }
                     })
 
@@ -65,7 +66,7 @@
 
 
         })//final document ready
-        function loadDepartamentos(oficio){
+        function loadEmpleados(oficio){
             console.log("boton pulsado")
             var oficioselect = oficio
             var request ="/api/Empleados/GetEmpleadosOficio/empleadosoficio/"+ oficioselect;
