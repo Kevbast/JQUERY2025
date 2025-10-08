@@ -28,6 +28,7 @@
         let url ="https://apiempleadosaction.azurewebsites.net/"
         $(document).ready(function(){
             console.log("Cargando oficios....")
+            //----------------CARGAMOS OFICIOS------------------------
             $.getJSON(url+"api/Empleados/GetOficios/oficios",function(data){
                 $.each(data,function(index,oficio){
                     
@@ -37,21 +38,23 @@
                 })  
             })//final getJSON
 
-            //selectchange
+            //----------------------SELECT_OFICIOS----------------------------
             $("#selectoficios").change(function(){
             console.log("oficio seleccionado")
-            var oficio= $("#selectoficios").val();
+            var oficio= $("#selectoficios").val();//recoger oficio empleados
             console.log(oficio)
-            //recoger oficio empleados
+            loadDepartamentos(oficio);//cargamos el oficio para visualizarlo antes de actuar!!!!
+                //FUNCIÓN DEL BOTÓN
                 $("#buttonincremento").click(function(){
                     var salarioincrementado= Number($("#cajasalario").val());
-                    var request="/api/Empleados/IncrementarSalarioOficios/"+oficio+"/"+salarioincrementado
+                    var request="/api/Empleados/IncrementarSalarioOficios/"+oficio+"/"+salarioincrementado;
                     $.ajax({
                         url:url + request,
                         method:"PUT",
                         contentType: "application/json",//TIPO DE DATO QUE VAMOS A RECIBIR //como ya lo hace todo la request no haría falta el data:                    
                         success:function(){
-                        console.log("ACTUALIZADO CORRECTAMENTE")
+                        console.log("ACTUALIZADO CORRECTAMENTE");
+                        //LLAMAMOS PARA QUE RECARGUE 
                         loadDepartamentos(oficio);
                         }
                     })
