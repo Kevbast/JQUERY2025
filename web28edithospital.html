@@ -173,8 +173,21 @@
     </nav>
     <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Navbar example</h1>
+            <h1>Edit hospital</h1>
+            <h2 id="mensaje">Mensaje:</h2>
             
+            <h3>Introduce los nuevos datos....</h3>
+            <label >Id hospital</label>
+            <input type="text"  id="cajaid" class="form-control">
+            <label >Nombre</label>
+            <input type="text"  id="cajanombre" class="form-control">
+            <label >Dirección</label>
+            <input type="text"  id="cajadireccion" class="form-control">
+            <label >Telefono</label>
+            <input type="text"  id="cajatelefono" class="form-control">
+            <label >Camas</label>
+            <input type="text"  id="cajacamas" class="form-control"><br>
+            <button id="botonupdate" class="btn bt-info border">Actualizar hospital</button>
         </div>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
@@ -182,8 +195,47 @@
      <script src="js/jquery-3.7.1.js"></script>
 
     <script>
+        let url="https://apicrudhospital.azurewebsites.net/";
         $(document).ready(function(){
-            alert("FUNCIONANDO")
+            var params = new window.URLSearchParams(window.location.search);
+            var idHospital = params.get("idhospital");
+            // Poner el valor en el placeholder del input
+            $("#cajaid").attr("placeholder", idHospital+"...");
+            console.log("Id hospital "+ idHospital);
+             //-------------UPDATE BUTTON------------------
+             $("#botonupdate").click(function(){
+                var id = Number($("#cajaid").val());
+                var nombre = $("#cajanombre").val();
+                var direccion = $("#cajadireccion").val();
+                var telefono = $("#cajatelefono").val();
+                var camas = Number($("#cajacamas").val());
+                //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
+                var hospital = new Object();
+                hospital.idhospital= id;
+                hospital.nombre= nombre;
+                hospital.direccion= direccion;
+                hospital.telefono= telefono;
+                hospital.camas= camas;
+                //CONVERTIMOS EL OBJETO JS A JSON
+                 var hospitalJSON = JSON.stringify(hospital);
+                 console.log(hospitalJSON)
+
+                 //Procedemos con el update!!
+                 var request="/webresources/hospitales/put"
+                 $.ajax({
+                    url:url+request,
+                    method:"PUT",
+                    contentType:"application/json",
+                    data:hospitalJSON,
+                    success:function(data){
+                        console.log("HOSPITAL ACTUALIZADO!!")
+                        $("#mensaje").text("HOSPITAL"+data.idhospital+ "actualizado!!")
+                        //mandamos al home de vuelta    
+                        window.location.href="web28homehospitales.html";
+                    }
+                })
+
+             })
         })
     </script>
 </body>

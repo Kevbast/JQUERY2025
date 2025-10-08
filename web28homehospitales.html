@@ -202,17 +202,20 @@
                 console.log("Leyendo hospitales");
                 var html="";
                 $.each(data,function(index,hospital){
-                    console.log(hospital.idhospital)
-                    html += "<tr>"
-                        html +="<td>" + hospital.nombre +"</td>"
-                        html +="<td>" + hospital.direccion +"</td>"
-                        html +="<td>";
-                        //web28detailshospital.html?idhospital=99 //FUNCIÓN IMPORTANTE,revisar minusculass
-                        html += "<a href='web28detailshospital.html?idhospital="+hospital.idhospital+ "'>Details</a>"++ 
-                        html += "<a href='web28detailshospital.html?idhospital="+hospital.idhospital+ "'>Edit</a>"++
-                        html +="</td>";
-                    html += "</tr>"
-                })
+                        html += "<tr>";
+                        html += "<td>" + hospital.nombre + "</td>";
+                        html += "<td>" + hospital.direccion + "</td>";
+                        html += "<td class='d-flex justify-content-center'>";
+                        //web28detailshospital.html?idhospital=77
+                        html += "<a href='web28detailshospital.html?idhospital="
+                        + hospital.idhospital + "' class='btn btn-success'>Details</a> ";
+                        html += " <a href='web28edithospital.html?idhospital="
+                        + hospital.idhospital + "' class='btn btn-info'>Edit</a> ";
+                        html += " <a href='web28edithospital.html?idhospital="
+                        + hospital.idhospital + "' class='btn btn-danger'>Delete</a> ";
+                        html += "</td>";
+                        html += "</tr>";
+                    })
                 $("#tablahospitales tbody").html(html);
             }
            })
