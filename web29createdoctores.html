@@ -7,12 +7,12 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Astro v5.13.2">
-    <title>Fixed top navbar example · Bootstrap v5.3</title>
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-fixed/">
-     <script src="js/color-modes.js"></script> <!--lo vemos en la página y lo descargamos -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Navbar Template · Bootstrap v5.3</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbars-offcanvas/">
+    <script src="js/color-modes.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <meta name="theme-color" content="#712cf9">
-    <link href="css/navbar-fixed.css" rel="stylesheet">
+    <link href="css/navbars-offcanvas.css" rel="stylesheet">
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -153,38 +153,96 @@
                     </svg> </button> </li>
         </ul>
     </div>
-    <!-- BARRA DE NAVEGACIÓN -->
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <div class="container-fluid"> <a class="navbar-brand" href="#">CRUD HOSPITALES</a> <button class="navbar-toggler"
-                type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
-                aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item"> <a class="nav-link active" aria-current="page" href="web28homehospitales.html">Home</a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="web28createhospital.html">New hospital</a> </li>
-                </ul>
-                <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search"
-                        aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+    <main>
+        <nav class="navbar navbar-dark bg-dark" aria-label="Dark offcanvas navbar">
+            <div class="container-fluid"> <a class="navbar-brand" href="web29homedoctores.html">Insert doctor</a> <button
+                    class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasNavbarDark" aria-controls="offcanvasNavbarDark"
+                    aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbarDark"
+                    aria-labelledby="offcanvasNavbarDarkLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarDarkLabel">Offcanvas</h5> <button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <li class="nav-item"> <a class="nav-link active" aria-current="page" href="web29homedoctores.html">Home</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="web29createdoctores.html">New doctores</a> </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
-    <main class="container">
+        </nav>
+        
+        <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Navbar example</h1>
+            <h1>Create new doctor</h1>
+            <h2 id="mensaje">Mensaje:</h2>
+
+            <label >Id doctor:</label>
+            <input type="text"  id="cajaiddoctor" class="form-control">
+            <label >Id hospital:</label>
+            <input type="text"  id="cajaidhospital" class="form-control">
+            <label >Apellido:</label>
+            <input type="text"  id="cajaapellido" class="form-control">
+            <label >Especialidad:</label>
+            <input type="text"  id="cajaespecialidad" class="form-control">
+            <label >Salario:</label>
+            <input type="text"  id="cajasalario" class="form-control"><br>
+
+            <button id="botoninsert" class="btn btn-info border">Insertar doctor</button>
             
         </div>
+    </main>
+    </main>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
     <!-- FUNCION SCRIPT JQUERY -->
     <script src="js/jquery-3.7.1.js"></script>
 
     <script>
+         let url="https://apicruddoctores.azurewebsites.net/"
         $(document).ready(function(){
-            alert("FUNCIONANDO")
+            $("#botoninsert").click(function(){
+                console.log("Doctor insertdo!")
+                //pasamos los parametros a su debido tipo
+                var idDoctor = Number($("#cajaiddoctor").val());
+                var idHospital = Number($("#cajaidhospital").val());
+                var apellido = $("#cajaapellido").val();
+                var especialidad = $("#cajaespecialidad").val();
+                var salario = Number($("#cajasalario").val());
+
+                //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
+                var doctor = new Object();
+                doctor.idDoctor= idDoctor;
+                doctor.idHospital= idHospital;
+                doctor.apellido= apellido;
+                doctor.especialidad= especialidad;
+                doctor.salario= salario;
+                //CONVERTIMOS EL OBJETO JS A JSON
+                 var doctorJSON = JSON.stringify(doctor);
+                 console.log(doctorJSON)
+
+                 //Procedemos con la inserción!!
+                 var request= "api/Doctores"
+
+                 $.ajax({
+                    url:url+request,
+                    method:"POST",
+                    contentType:"application/json",
+                    data:doctorJSON,
+                    success:function(data){
+                        console.log("DOCTOR AÑADIDO!!")
+                        //mandamos al home de vuelta
+                        window.location.href="web29homedoctores.html";
+                    }
+                })
+
+
+            })
         })
-    </script>
+    </script> 
 </body>
 
 </html>
