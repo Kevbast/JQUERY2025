@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Astro v5.13.2">
-    <title>Fixed top navbar example · Bootstrap v5.3</title>
+    <title>Edit hospital</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-fixed/">
      <script src="js/color-modes.js"></script> <!--lo vemos en la página y lo descargamos -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -163,7 +163,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item"> <a class="nav-link active" aria-current="page" href="web28homehospitales.html">Home</a> </li>
                     <li class="nav-item"> <a class="nav-link" href="web28createhospital.html">New hospital</a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="web28edithospital.html">Edit hospital</a> </li>
+                    
                 </ul>
                 <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search"
                         aria-label="Search"> <button class="btn btn-outline-success" type="submit">Search</button>
@@ -177,17 +177,16 @@
             <h2 id="mensaje">Mensaje:</h2>
             
             <h3>Introduce los nuevos datos....</h3>
-            <label >Id hospital</label>
-            <input type="text"  id="cajaid" class="form-control">
+            <input id="cajaid" type="hidden" class="form-control">
             <label >Nombre</label>
             <input type="text"  id="cajanombre" class="form-control">
             <label >Dirección</label>
             <input type="text"  id="cajadireccion" class="form-control">
-            <label >Telefono</label>
+            <label >Teléfono</label>
             <input type="text"  id="cajatelefono" class="form-control">
             <label >Camas</label>
             <input type="text"  id="cajacamas" class="form-control"><br>
-            <button id="botonupdate" class="btn bt-info border">Actualizar hospital</button>
+            <button id="botonupdate" class="btn btn-info border">Actualizar hospital</button>
         </div>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
@@ -197,11 +196,30 @@
     <script>
         let url="https://apicrudhospital.azurewebsites.net/";
         $(document).ready(function(){
+            //obtenemos el id pasado por la url
             var params = new window.URLSearchParams(window.location.search);
             var idHospital = params.get("idhospital");
-            // Poner el valor en el placeholder del input
-            $("#cajaid").attr("placeholder", idHospital+"...");
+            // Poner el valor en el placeholder del input(opcional)
+            //$("#cajaid").attr("placeholder", idHospital+"...");
             console.log("Id hospital "+ idHospital);
+
+            //--------------PINTAMOS LOS VALORES EN LAS CAJAS--------------------
+            let requestFind="webresources/hospitales/"+idHospital;
+            $.ajax({
+            url:url+requestFind,
+            type:"GET",
+            success:function(data){
+                console.log(data);
+                $("#cajaid").val(data.idhospital);
+                $("#cajanombre").val(data.nombre);
+                $("#cajadireccion").val(data.direccion);
+                $("#cajatelefono").val(data.telefono);
+                $("#cajacamas").val(data.camas);
+            }
+            
+           })
+            
+
              //-------------UPDATE BUTTON------------------
              $("#botonupdate").click(function(){
                 var id = Number($("#cajaid").val());
@@ -221,16 +239,16 @@
                  console.log(hospitalJSON)
 
                  //Procedemos con el update!!
-                 var request="/webresources/hospitales/put"
+                 var requestPut="/webresources/hospitales/put"
                  $.ajax({
-                    url:url+request,
+                    url:url+requestPut,
                     method:"PUT",
                     contentType:"application/json",
                     data:hospitalJSON,
                     success:function(data){
                         console.log("HOSPITAL ACTUALIZADO!!")
-                        //mandamos al home de vuelta
-                        window.location.href="web28homehospitales.html";
+                        //mandamos a details 
+                        window.location.href="web28detailshospital.html?idhospital="+id;
                     }
                 })
 
