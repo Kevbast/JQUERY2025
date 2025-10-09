@@ -230,14 +230,15 @@
 
             //-------------UPDATE BUTTON------------------
              $("#botonupdate").click(function(){
-                var id= Number($("#cajaiddoctor").val())
+                var id= Number($("#cajaiddoctor").val());
                 var idHospital = Number($("#cajaidhospital").val());
                 var apellido = $("#cajaapellido").val();
                 var especialidad = $("#cajaespecialidad").val();
                 var salario = Number($("#cajasalario").val());
+                console.log(id)
                 //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
                 var doctor = new Object();
-                doctor.idDoctor= idDoctor;
+                doctor.idDoctor= id;
                 doctor.idHospital= idHospital;
                 doctor.apellido= apellido;
                 doctor.especialidad= especialidad;
