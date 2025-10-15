@@ -39,9 +39,39 @@
         </thead>
         <tbody></tbody>
     </table>
+    <br>
+    <!-- OTRAS FUNCIONES A PARTE,EMPEZAMOS CON SEARCH ID -->
+    <h1>Buscar doctor por id o especialidad</h1>
+    <label >Id doctor</label>
+    <input type="text" id="cajaiddoc">
+    <button id="botonsearchid">Buscar</button><br/>
+    <label >Especialidad</label>
+    <input type="text" id="cajaespecialidad2">
+    <button id="botonsearchespecialidad">Buscar</button><br/>
+    
+    <table id="tablahospital2">
+        <thead>
+            <tr>
+                <th>Apellidos</th>
+                <th>Especialidad</th>
+                <th>Id doctor</th>
+                <th>Id hospital</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- UPDATE SALARIO X ESPECIALIDAD -->
+    <h3>Quieres subir el salario?</h3>
+    <label >Especialidad</label>
+    <input type="text" id="cajaespecialidad3">
+    <label >Salario</label>
+    <input type="text" id="cajasalario2">
+    <button id="botonupdatesalario">Subir salario</button><br/>
+
     <script src="js/jquery-3.7.1.js"></script>
     <script>
-        let url="https://apicruddoctoresxml.azurewebsites.net/";
+    let url="https://apicruddoctoresxml.azurewebsites.net/";
         $(document).ready(function(){
             //CARGAREMOS PRIMERO LA FUNCIÓN PARA VISUALIZAR LA TABLA
             loadDoctores();
@@ -79,7 +109,7 @@
 
             //EMPEZAMOS CON EL UPDATE
             $("#botonupdate").click(function(){
-                 let apellido = $("#cajaapellido").val();
+                let apellido = $("#cajaapellido").val();
                 let especialidad = $("#cajaespecialidad").val();
                 let idDoctor = $("#cajaid").val();
                 let idHospital = $("#cajaidhospital").val();
@@ -115,11 +145,87 @@
 
             });//FINAL BOTONDELETE
 
+            //---------------------------------------------------FUNCIONES A PARTE DE LAS DE CRUD-------------------------------------------------------------
+            //SEARCH ID
+            $("#botonsearchid").click(function(){
+                let idDoctor =$("#cajaiddoc").val();
+                console.log(idDoctor);
+                var request= "api/Doctores/"+ idDoctor;
+                var html="";
+                $.get(url+request,function(data){
+                    console.log("Leyendo servicio....");
+                    
+                    var apellido= $(data).find("Apellido").text();
+                    var especialidad= $(data).find("Especialidad").text();
+                    var idDoctor= $(data).find("IdDoctor").text();
+                    var idHospital= $(data).find("IdHospital").text();
+                    var salario= $(data).find("Salario").text();
+
+                    //lo pintamos
+                    html += "<tr>";
+                    html += "<td>"+ apellido + "</td>";
+                    html += "<td>"+ especialidad + "</td>";
+                    html += "<td>"+ idDoctor + "</td>";
+                    html += "<td>"+ idHospital + "</td>";
+                    html += "<td>"+ salario + "</td>";
+                    html += "</tr>";
+                    console.log(html)
+
+                    //se printea dentro del get,puesto q no hay data,ATENTOOO
+                    $("#tablahospital2 tbody").html(html);
+                })
+                
+            })
+            //SEARCH DOCTORES POR ESPECIALIDAD
+            $("#botonsearchespecialidad").click(function(data){
+                let especialidad = $("#cajaespecialidad2").val();
+                console.log(especialidad)
+                var request ="api/Doctores/DoctoresEspecialidad/"+especialidad; 
+                $.get(url+request,function(data){
+                    console.log("Leyendo servicio...."); 
+                    var html="";  
+                    $(data).find("Doctor").each(function(){
+                    var apellido= $(this).find("Apellido").text();
+                    var especialidad= $(this).find("Especialidad").text();
+                    var idDoctor= $(this).find("IdDoctor").text();
+                    var idHospital= $(this).find("IdHospital").text();
+                    var salario= $(this).find("Salario").text();
+                    //lo pintamos
+                    html += "<tr>";
+                    html += "<td>"+ apellido + "</td>";
+                    html += "<td>"+ especialidad + "</td>";
+                    html += "<td>"+ idDoctor + "</td>";
+                    html += "<td>"+ idHospital + "</td>";
+                    html += "<td>"+ salario + "</td>";
+                    html += "</tr>";
+                 });//final data
+                    //atentooo,como devuelve más de uno toca hacer el eachhh functionn!!
+                    $("#tablahospital2 tbody").html(html);
+                })
+            })
+
+            //UPDATE SALARIOS INCREMENTANDOLOS
+            $("#botonupdatesalario").click(function(){
+                let especialidad = $("#cajaespecialidad3").val();
+                let incremento = $("#cajasalario2").val();
+                console.log(especialidad)
+                console.log(incremento)
+                var request="api/Doctores/UpdateSalarioDoctores/"+especialidad+"/"+incremento;
+                $.ajax({
+                url:url+request,
+                type: "PUT",
+                contentType:"text/xml",
+                success:function(){
+                    console.log("Salario añadido!!!!")
+                    loadDoctores();
+                }
+                })//final ajax
+            })
 
 
         })//Final document
 
-        //GET UPTADTE
+        //GET DATA XML UPTADTE
         function getDoctores(apellido,especialidad,idDoctor,idHospital,salario){
             let dataXML = "";
                 dataXML += "<Doctor>"
