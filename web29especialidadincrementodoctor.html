@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Astro v5.13.2">
-    <title>Navbar Template · Bootstrap v5.3</title>
+    <title>web29 incremento especialidad</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbars-offcanvas/">
     <script src="js/color-modes.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -185,23 +185,28 @@
         </nav>
         
         <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <h1>Edit doctor</h1>
-            <!-- INPUTS DONDE VAN A ESTAR ESCRITOS LOS VALORES QUE VAMOS A EDITAR  -->
-            <h3>Introduce los nuevos datos....</h3>
-            <input id="cajaiddoctor" type="hidden" class="form-control">
-            <label >Apellido</label>
-            <input type="text"  id="cajaapellido" class="form-control">
-            <label >Id hospital</label>
-            <input type="text"  id="cajaidhospital" class="form-control">
-            <label >Especialidad</label>
-            <input type="text"  id="cajaespecialidad" class="form-control">
-            <label >Salario</label>
-            <input type="text"  id="cajasalario" class="form-control"><br>
-            
-            <button id="botonupdate" class="btn btn-info border">Actualizar doctor</button>
-        </div>
-    </main>
+            <div class="bg-body-tertiary p-5 rounded">
+                <h1>Salario incrementado según la especialidad</h1>
+                <select name="doctores" id="selectespecialidad"></select>
+                <label >Incremento salarial: </label>
+                <input type="text" id="cajasalario"></body></html> 
+                <button id="buttonincremento">Incrementar salarios</button></br>
+                <p></p>
+                <!-- TABLA PARA VISUALIZAR LA LISTA DE DOCTORES POR ESPECIALIDADES -->
+            <table id="tabladoctores" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Apellidos</th>
+                        <th>Especialidad</th>
+                        <th>IdDoctor</th>
+                        <th>IdHospital</th>
+                        <th>Salario</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            </div>
+        </main>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
     <!-- FUNCION SCRIPT JQUERY -->
@@ -210,62 +215,68 @@
     <script>
         let url="https://apicruddoctores.azurewebsites.net/"
         $(document).ready(function(){
-            //obtenemos el id pasado por la url
-            var params = new window.URLSearchParams(window.location.search);
-            var idDoctor = params.get("idDoctor");
-            console.log("Id doctor: "+idDoctor)
-            //PINTAMOS LOS VALORES EN LAS CAJAS
-            let requestFind="api/Doctores/"+idDoctor;
-            //RECOGEMOS LOS DATOS CON UN GET ID PARA PLASMARLOS EN EL INPUT 
-            $.ajax({
-                url:url+requestFind,
-                type:"GET",
-                success:function(data){
-                    console.log(data)
-                    $("#cajaiddoctor").val(data.idDoctor);
-                    $("#cajaidhospital").val(data.idHospital);
-                    $("#cajaapellido").val(data.apellido);
-                    $("#cajaespecialidad").val(data.especialidad);
-                    $("#cajasalario").val(data.salario);
-                }
-            })//fin ajax
+           //----------------CARGAMOS TODAS LAS ESPECIALIDADES AL SELECT------------------------
+            $.getJSON(url+"api/Doctores/Especialidades",function(data){
+                $.each(data,function(index,especialidad){
+                    
+                    console.log(especialidad);
+                    var option = $("<option>",{"text":especialidad});
+                        $("#selectespecialidad").append(option);
+                })  
+            })//final getJSON
 
-            //-------------UPDATE BUTTON------------------
-             $("#botonupdate").click(function(){
-                var id= Number($("#cajaiddoctor").val());
-                var idHospital = Number($("#cajaidhospital").val());
-                var apellido = $("#cajaapellido").val();
-                var especialidad = $("#cajaespecialidad").val();
-                var salario = Number($("#cajasalario").val());
-                console.log(id)
-                //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
-                var doctor = new Object();
-                doctor.idDoctor= id;
-                doctor.idHospital= idHospital;
-                doctor.apellido= apellido;
-                doctor.especialidad= especialidad;
-                doctor.salario= salario;
-                //CONVERTIMOS EL OBJETO JS A JSON
-                 var doctorJSON = JSON.stringify(doctor);
-                 console.log(doctorJSON);
+            //----------------------SELECT_ESPECIALIDAD----------------------------
+            $("#selectespecialidad").change(function(){
+                console.log("especialidad seleccionada")
+                var especialidad= $(this).val();//recoger especialidad de los doctores
+                console.log(especialidad);
+                loadDoctores(especialidad);//cargamos la tabla con los doctores de dicha especialidad
 
-                //Procedemos con el update!!
-                 var request= "api/doctores"
-                 $.ajax({
-                    url:url+request,
-                    method:"PUT",
-                    contentType:"application/json",
-                    data:doctorJSON,
-                    success:function(data){
-                        console.log("DOCTOR MODIFICADO!!")
-                        //mandamos al home de vuelta
-                        window.location.href="web29homedoctores.html";
-                    }
+                //procedemos con la función del botón del salario incrementado
+                $("#buttonincremento").click(function(){
+                    //UNA BUENA PRÁCTICA SERÍA DECLARAR LA ESPECIALIDAD OTRA VEZ DENTRO DEL BOTÓN
+                    var salarioincrementado= Number($("#cajasalario").val());
+                    var requestincremento="/api/Doctores/"+especialidad+"/"+salarioincrementado;
+                    //---------------------procedemos con el método AJAX PARA INCREMENTAR EL SALARIO DE DICHA ESPECIALIDAD---------------------
+                    $.ajax({
+                        url:url+requestincremento,
+                        method:"PUT",//como ya lo hace todo la request no haría falta el data:
+                        success:function(){
+                            console.log("SALARIO DE LA ESPECIALIDAD INCREMENTADO CORRECTAMENTE");
+                            //RECARGAMOS LA TABLA
+                            loadDoctores(especialidad);
+                        }
+                    })
                 })
 
-             })//FINAL UPDATEBUTTON
+            })
 
-        })
+        })//final document ready
+
+        //FUNCIÓN QUE CARGA A LOS EMPLEADOS A PARTIR DE SU ESPECIALIDAD DENTRO DE UNA TABLA
+        function loadDoctores(especialidad){
+            var especialidadselect= especialidad;
+            var request="/api/Doctores/DoctoresEspecialidad/"+especialidadselect;
+            console.log("cargando doctor por especialidad...");
+            var html= "";
+            $.getJSON(url+request,function(data){
+            console.log("leyendo....")
+            $.each(data,function(index,doctores){
+                        html += "<tr >";
+                            html +="<td>"+doctores.apellido+"</td>";
+                            html +="<td>"+doctores.especialidad+"</td>";
+                            html +="<td>"+doctores.idDoctor+"</td>";
+                            html +="<td>"+doctores.idHospital+"</td>";
+                            html +="<td>"+doctores.salario+"</td>";
+                        html += "</tr>";
+                    })
+                $("#tabladoctores tbody").html(html);
+           }) 
+        }
+
+
+
+
     </script> 
 </body>
 

@@ -186,22 +186,11 @@
         
         <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Edit doctor</h1>
-            <!-- INPUTS DONDE VAN A ESTAR ESCRITOS LOS VALORES QUE VAMOS A EDITAR  -->
-            <h3>Introduce los nuevos datos....</h3>
-            <input id="cajaiddoctor" type="hidden" class="form-control">
-            <label >Apellido</label>
-            <input type="text"  id="cajaapellido" class="form-control">
-            <label >Id hospital</label>
-            <input type="text"  id="cajaidhospital" class="form-control">
-            <label >Especialidad</label>
-            <input type="text"  id="cajaespecialidad" class="form-control">
-            <label >Salario</label>
-            <input type="text"  id="cajasalario" class="form-control"><br>
-            
-            <button id="botonupdate" class="btn btn-info border">Actualizar doctor</button>
+            <h1>Detalle</h1>
+            <!-- POR HTML METEMOS LOS VALORES EN ESTA LISTA -->
+            <ul id="doctordetails" class="list-group"></ul>
         </div>
-    </main>
+        </main>
     </main>
     <script src="js/bootstrap.bundle.js"></script>
     <!-- FUNCION SCRIPT JQUERY -->
@@ -210,61 +199,25 @@
     <script>
         let url="https://apicruddoctores.azurewebsites.net/"
         $(document).ready(function(){
-            //obtenemos el id pasado por la url
-            var params = new window.URLSearchParams(window.location.search);
-            var idDoctor = params.get("idDoctor");
-            console.log("Id doctor: "+idDoctor)
-            //PINTAMOS LOS VALORES EN LAS CAJAS
-            let requestFind="api/Doctores/"+idDoctor;
-            //RECOGEMOS LOS DATOS CON UN GET ID PARA PLASMARLOS EN EL INPUT 
-            $.ajax({
+           //obtenemos el id pasado por la url
+           var params = new window.URLSearchParams(window.location.search);
+           var idDoctor = params.get("idDoctor");
+           console.log("Id doctor: "+idDoctor);
+           var html="";
+           let requestFind="api/Doctores/"+idDoctor;
+           $.ajax({
                 url:url+requestFind,
                 type:"GET",
                 success:function(data){
                     console.log(data)
-                    $("#cajaiddoctor").val(data.idDoctor);
-                    $("#cajaidhospital").val(data.idHospital);
-                    $("#cajaapellido").val(data.apellido);
-                    $("#cajaespecialidad").val(data.especialidad);
-                    $("#cajasalario").val(data.salario);
+                    html+="<li class='list-group-item'><b>Apellido:</b> "+data.apellido+""+"</li>"
+                    html+="<li class='list-group-item'><b>Especialidad:</b> "+data.especialidad+""+"</li>"
+                    html+="<li class='list-group-item'><b>ID:</b> "+data.idDoctor+""+"</li>"
+                    html+="<li class='list-group-item'><b>ID Hospital:</b> "+data.idHospital+""+"</li>"
+                    html+="<li class='list-group-item'><b>Salario:</b> "+data.salario+""+"</li>"
+                    $("#doctordetails").html(html)  
                 }
-            })//fin ajax
-
-            //-------------UPDATE BUTTON------------------
-             $("#botonupdate").click(function(){
-                var id= Number($("#cajaiddoctor").val());
-                var idHospital = Number($("#cajaidhospital").val());
-                var apellido = $("#cajaapellido").val();
-                var especialidad = $("#cajaespecialidad").val();
-                var salario = Number($("#cajasalario").val());
-                console.log(id)
-                //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
-                var doctor = new Object();
-                doctor.idDoctor= id;
-                doctor.idHospital= idHospital;
-                doctor.apellido= apellido;
-                doctor.especialidad= especialidad;
-                doctor.salario= salario;
-                //CONVERTIMOS EL OBJETO JS A JSON
-                 var doctorJSON = JSON.stringify(doctor);
-                 console.log(doctorJSON);
-
-                //Procedemos con el update!!
-                 var request= "api/doctores"
-                 $.ajax({
-                    url:url+request,
-                    method:"PUT",
-                    contentType:"application/json",
-                    data:doctorJSON,
-                    success:function(data){
-                        console.log("DOCTOR MODIFICADO!!")
-                        //mandamos al home de vuelta
-                        window.location.href="web29homedoctores.html";
-                    }
-                })
-
-             })//FINAL UPDATEBUTTON
-
+            })
         })
     </script> 
 </body>
