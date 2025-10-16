@@ -40,7 +40,7 @@
         <tbody></tbody>
     </table>
     <br>
-    <!-- OTRAS FUNCIONES A PARTE,EMPEZAMOS CON SEARCH ID -->
+    <!-- OTRAS FUNCIONES A PARTE,EMPEZAMOS CON LOS INPUTS SEARCH ID -->
     <h1>Buscar doctor por id o especialidad</h1>
     <label >Id doctor</label>
     <input type="text" id="cajaiddoc">
@@ -76,7 +76,7 @@
             //CARGAREMOS PRIMERO LA FUNCIÓN PARA VISUALIZAR LA TABLA
             loadDoctores();
 
-            //RECUPERAMOS EL BOTON INSERT Y EMPEZAMOS CON LA FUNCIÓN
+            //RECUPERAMOS EL BOTON INSERT Y EMPEZAMOS CON LA FUNCIÓN INSERT
             $("#botoninsert").click(function(){
                 let apellido = $("#cajaapellido").val();
                 let especialidad = $("#cajaespecialidad").val();
@@ -238,8 +238,6 @@
             return dataXML;
         }
 
-
-
         //FUNCION PRINCIPAL PARA CARGAR LA LISTA
         function loadDoctores(){
             var request="api/Doctores";
@@ -265,8 +263,6 @@
                  $("#tablahospital tbody").html(html);
             })
         }
-
-
 
     </script>
 </body>
