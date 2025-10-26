@@ -184,8 +184,20 @@
         </nav>
         
         <main class="container">
-        <div class="bg-body-tertiary p-5 rounded">
-            <h1>Home template</h1>
+        <div class="bg-body-tertiary p-5 rounded" style="text-align: center;">
+            <h1>Apuestas</h1>
+            <a href='web30template.html' class='btn btn-info'>Volver</a>
+            <table id="tablaapuestas" class="table table-bordered" > 
+                <thead>
+                    <tr>
+                    <th>USUARIO</th>
+                    <th>RESULTADO</th>
+                    <th>FECHA</th>
+                    <th></th>
+                    </tr>
+                </thead>               
+                <tbody></tbody>
+            </table>
             
         </div>
     </main>
@@ -201,8 +213,6 @@
             //----------------CARGAMOS TODAS LAS ESPECIALIDADES AL SELECT------------------------
             $.getJSON(url+"api/Equipos",function(data){
                 $.each(data,function(index,equipos){
-                    
-                    console.log(equipos);
                     var option = $("<option>",{"text":equipos.nombre, "value":equipos.idEquipo});
                         $("#selectequipos").append(option);
                 })
@@ -218,8 +228,67 @@
             })    
             })//final getJSON
 
+            let request="/api/Apuestas";
+            $.ajax({
+                url:url+request,
+                type:"GET",
+                success:function(data){
+                    console.log("Leyendo apuestas..");
+                    var html="";
+                $.each(data,function(index,apuestas){
+                    console.log(apuestas)
+                        html += "<tr>";
+                        html += "<td>" + apuestas.usuario + "</td>";
+                        html += "<td>" + apuestas.resultado + "</td>";
+                        html += "<td>" + apuestas.fecha + "</td>";
+                        html += "<td >";
+                        html += " <button value='"
+                        + apuestas.idApuesta + "' class='delete btn btn-danger'>Delete</button> ";
+                        html += "</td>";
+                        html += "</tr>";                      
+                    })
+                $("#tablaapuestas tbody").html(html);
+                }
+            })//FINAL AJAX
+
+            //---------------DELETE BUTTON + alert con js------------------------
+            $(document).on("click", ".delete", function(){
+            var idApuesta = $(this).val();
+            console.log(idApuesta)
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                    title: "Deleted!",
+                    text: "Apuesta "+idApuesta+" eliminado!",
+                    icon: "success"
+                    });
+                    //FUNCIONALIDAD DEL DELETE
+                    let request = "api/Apuestas/"+ idApuesta;
+                        $.ajax({
+                            url:url+request,
+                            method:"Delete",
+                            success:function(){
+                                console.log(idApuesta +"eliminado")
+                                window.location.href="web30apuestas.html";
+                            }
+                        })
+                }//FINAL IF
+                });
+                  
+            })//final document on click
+
         })
     </script> 
+    <!-- script alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

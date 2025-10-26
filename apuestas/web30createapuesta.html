@@ -185,7 +185,17 @@
         
         <main class="container">
         <div class="bg-body-tertiary p-5 rounded">
-            <h1>Home template</h1>
+            <h1>Create new apuesta</h1>
+            <!-- INPUTS DE LOS VALORES QUE VAMOS A RECOGER PARA PODER USARLOS PARA INSERTAR UN NUEVO DOCTOR -->
+            <label >Usuario:</label>
+            <input type="text"  id="cajauser" class="form-control">
+            <label >Resultado:</label>
+            <input type="text"  id="cajaresult" class="form-control">
+            <label >Fecha:</label>
+            <input type="text"  id="cajafecha" class="form-control">
+            <label >Especialidad:</label><br>
+
+            <button id="botoninsert" class="btn btn-info border">Insertar apuesta</button>
             
         </div>
     </main>
@@ -201,8 +211,6 @@
             //----------------CARGAMOS TODAS LAS ESPECIALIDADES AL SELECT------------------------
             $.getJSON(url+"api/Equipos",function(data){
                 $.each(data,function(index,equipos){
-                    
-                    console.log(equipos);
                     var option = $("<option>",{"text":equipos.nombre, "value":equipos.idEquipo});
                         $("#selectequipos").append(option);
                 })
@@ -217,6 +225,41 @@
                 window.location.href = "web30detalleEquipo.html?idEquipo=" + idEquipo;
             })    
             })//final getJSON
+
+            //-------------------------SEGUIMOS CON LA SIGUIENTE FUNCION DE ESTA PÁGINA,EL INSERT------------------------------------
+            $("#botoninsert").click(function(){
+                console.log("Insertando apuesta....!")
+                //pasamos los parametros a su debido tipo
+                var usuario = $("#cajauser").val();
+                var resultado = $("#cajaresult").val();
+                var fecha = $("#cajafecha").val();
+
+                //NECESITAMOS CREAR UN NUEVO OBJETO JS CON LAS MISMAS PROPIEDADES DEL JSON
+                var apuesta = new Object();
+                apuesta.usuario= usuario;
+                apuesta.resultado= resultado;
+                apuesta.fecha= fecha;
+                //CONVERTIMOS EL OBJETO JS A JSON
+                 var apuestaJSON = JSON.stringify(apuesta);
+                 console.log(apuestaJSON)
+
+                 //Procedemos con la inserción!! MIRAR BIEN LA REQUEST
+                 var request= "api/Apuestas"
+
+                 $.ajax({
+                    url:url+request,
+                    method:"POST",
+                    contentType:"application/json",
+                    data:apuestaJSON,
+                    success:function(data){
+                        console.log("Apuesta añadida!!")
+                        //mandamos al home de vuelta
+                        window.location.href="web30apuestas.html";
+                    }
+                })//final ajax
+
+
+            })
 
         })
     </script> 
